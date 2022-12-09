@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./etc/Dockerfile
+      args:
+        ENV: production
+    image: change_me_django
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+      - socket_volume:/socket
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    command: /bin/sh -c "python manage.py collectstatic --noinput && python manage.py migrate && uwsgi --socket /socket/django.sock --master --max-requests 5000 --chmod-socket --disable-logging --disable-write-exception -w 'config.wsgi:application' --enable-threads --harakiri 60 --cheaper-algo busyness --processes 500 --cheaper 8 --cheaper-overload 1 --cheaper-step 16"
+
+  postgres:
+    image: postgres:11-alpine
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.production/.postgres
+
+  nginx:
+    build:
+      context: ./etc/nginx
+      dockerfile: Dockerfile
+      args:
+        BACKEND_URL: localhost
+    container_name: nginx
+    volumes:
+      - socket_volume:/socket
+    ports:
+      - "80:80"
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+  local_redis_data: {}
+  socket_volume: {}
