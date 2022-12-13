@@ -1,13 +1,10 @@
 """
 Base settings to build other settings files upon.
 """
-from collections import OrderedDict
 from datetime import timedelta
-from decimal import Decimal
 from typing import Any, Dict, List
 
 import environ
-from celery.schedules import crontab
 
 ROOT_DIR = environ.Path(__file__) - 3  # (backend_meta/config/settings/base.py - 3 = backend_meta/)
 APPS_DIR = ROOT_DIR.path("apps")
@@ -96,9 +93,7 @@ THIRD_PARTY_APPS = [
 
 HEALTH_CHECK = {"DISK_USAGE_MAX": None}
 
-LOCAL_APPS = [
-    "apps.users"
-]  # type: List[Any]
+LOCAL_APPS = ["apps.users"]  # type: List[Any]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

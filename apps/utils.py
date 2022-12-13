@@ -12,6 +12,7 @@ from drf_spectacular.utils import (
     extend_schema,
 )
 
+
 class SwaggerWrapper:
     """Initial swagger wrapper for `extend_schema`"""
 

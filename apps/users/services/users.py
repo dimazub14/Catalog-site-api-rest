@@ -1,6 +1,7 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
 from apps.users.models import User
+
 
 class UserService:
     """Class-collection of business logic related to user"""
@@ -8,7 +9,7 @@ class UserService:
     @classmethod
     def _create_user(cls, data: Dict[str, Any]) -> "User":
         """Static method return created user object"""
-        user = User.objects.create_user(**data)  # type: ignore
+        user = User.objects.create_user(**data)
         return user
 
     @classmethod
