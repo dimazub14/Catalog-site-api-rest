@@ -10,5 +10,4 @@ else:
 app_name = "api"
 urlpatterns = router.urls
 
-urlpatterns += [
-]
+urlpatterns += [path("users/", include("apps.users.api.urls", namespace="users_app"))]
