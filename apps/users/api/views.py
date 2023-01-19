@@ -1,9 +1,10 @@
+from django.views.generic import TemplateView
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-
 from apps.users.api.serializers import UserRegistrationSerializer
 from apps.users.services import UserService
+
 
 
 class RegistrationUserAPIView(GenericAPIView):
