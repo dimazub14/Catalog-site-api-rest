@@ -1,4 +1,5 @@
 from drf_spectacular.utils import OpenApiExample, inline_serializer
+from rest_framework import serializers
 
 from apps.users.api.serializers import UserRegistrationSerializer
 from apps.utils import SwaggerWrapper
@@ -11,9 +12,9 @@ class LoginSwagger(SwaggerWrapper):
     User = ['Users']
 
     responses = {
-        "200": inline_serializer(many=False),
+        "200": inline_serializer(many=False, name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()}),
     }
-    request = inline_serializer()
+    request = inline_serializer(name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()})
 
     examples=[
         OpenApiExample(
@@ -62,9 +63,9 @@ class RefreshSwagger(SwaggerWrapper):
     User = ['Users']
 
     responses = {
-        "200": inline_serializer(many=False),
+        "200": inline_serializer(many=False, name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()}),
     }
-    request = inline_serializer()
+    request = inline_serializer(name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()})
 
     examples=[
         OpenApiExample(
