@@ -12,9 +12,9 @@ class LoginSwagger(SwaggerWrapper):
     User = ['Users']
 
     responses = {
-        "200": inline_serializer(many=False, name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()}),
+        "200": inline_serializer(name="Response login", fields={"refresh":serializers.CharField(), "access":serializers.CharField()}),
     }
-    request = inline_serializer(name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()})
+    request = inline_serializer(name="Request Login", fields={"email":serializers.EmailField(), "password":serializers.CharField()})
 
     examples=[
         OpenApiExample(
@@ -55,6 +55,17 @@ class LoginSwagger(SwaggerWrapper):
             response_only=True,
             status_codes=["400"]
         ),
+        OpenApiExample(
+            name="Success",
+            value={
+                "email": "test@example.com",
+                "password": "Example123"
+            },
+            summary="Success",
+            description="Success",
+            request_only=True,
+            response_only=False,
+        ),
     ]
 class RefreshSwagger(SwaggerWrapper):
     """Refresh-Documentation"""
@@ -63,9 +74,9 @@ class RefreshSwagger(SwaggerWrapper):
     User = ['Users']
 
     responses = {
-        "200": inline_serializer(many=False, name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()}),
+        "200": inline_serializer(name="Response Refresh", fields={"access":serializers.CharField(), "refresh":serializers.CharField()}),
     }
-    request = inline_serializer(name="token", fields={"refresh":serializers.CharField(), "access":serializers.CharField()})
+    request = inline_serializer(name="Request Refresh", fields={"refresh":serializers.CharField()})
 
     examples=[
         OpenApiExample(
@@ -80,31 +91,14 @@ class RefreshSwagger(SwaggerWrapper):
             status_codes=["200"]
         ),
         OpenApiExample(
-            name="Errors",
+            name="Success",
             value={
-                "detail": [
-                    "No active account found with the given credentials"
-                ]
+                "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3NDA2MTg5NCwiaWF0IjoxNjc0MDUxMDk0LCJqdGkiOiIyODk4MzczYzE3OWY0Yjk5Yjg1NjVjYjBjODFlOGY4MSIsInVzZXJfaWQiOjF9.Yzq3XvmA7hceZtlKAEZSv3NJZ3MdOaNeqvedWWFOnJU",
             },
-            summary="Errors",
-            description="Errors",
-            response_only=True,
-            status_codes=["401"]
-        ),
-        OpenApiExample(
-            name="Errors",
-            value={
-                "email": [
-                    "This field may not be blank."
-                ],
-                "password": [
-                    "This field may not be blank."
-                ]
-            },
-            summary="Errors",
-            description="Errors",
-            response_only=True,
-            status_codes=["400"]
+            summary="Example",
+            description="Refresh example",
+            request_only=True,
+            response_only=False
         ),
     ]
 
