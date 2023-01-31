@@ -5,6 +5,7 @@ from apps.utils import SwaggerWrapper
 
 
 class RegistrationSwagger(SwaggerWrapper):
+    """Registration-Documentation"""
     summary = "Registration"
     description = "Endpoint for user registration. If successful, gives a pair of access/refresh tokens."
     follower = ['followers']
@@ -53,5 +54,5 @@ class RegistrationSwagger(SwaggerWrapper):
             response_only=True,
             status_codes=["400"]
         ),
-
     ]
+
