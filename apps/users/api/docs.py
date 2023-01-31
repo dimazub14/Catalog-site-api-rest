@@ -4,9 +4,9 @@ from apps.users.api.serializers import UserRegistrationSerializer
 from apps.utils import SwaggerWrapper
 
 
-class FollowerSwagger(SwaggerWrapper):
-    summary = "for login"
-    description = "This api for login by user"
+class RegistrationSwagger(SwaggerWrapper):
+    summary = "Registration"
+    description = "Endpoint for user registration. If successful, gives a pair of access/refresh tokens."
     follower = ['followers']
 
     responses = {
