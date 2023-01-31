@@ -5,7 +5,7 @@ from apps.utils import SwaggerWrapper
 
 
 class LoginSwagger(SwaggerWrapper):
-    """Registration-Documentation"""
+    """Login-Documentation"""
     summary = "Login"
     description = "Endpoint for user registration. If successful, gives a pair of access/refresh tokens."
     User = ['Users']
