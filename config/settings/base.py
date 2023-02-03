@@ -316,6 +316,7 @@ SMTP_TYPE = env("SMTP_TYPE")  # SMTP | SES
 # SMTP
 SMTP_ENABLED = env.bool("SMTP_ENABLED")
 EMAIL_SUPPORTS = env.list("EMAIL_SUPPORTS")
+DEFAULT_FROM_EMAIL = env.str("DJANGO_DEFAULT_FROM_EMAIL")
 if SMTP_ENABLED:
     if SMTP_TYPE == "SMTP":
         EMAIL_HOST = env("EMAIL_HOST")
@@ -328,8 +329,8 @@ if SMTP_ENABLED:
         AWS_SES_ACCESS_KEY_ID = env.str("AWS_SES_ACCESS_KEY_ID", default=None)
         AWS_SES_SECRET_ACCESS_KEY = env.str("AWS_SES_SECRET_ACCESS_KEY", default=None)
         AWS_SES_REGION_NAME = env.str("AWS_SES_REGION_NAME", default=None)
-        # AWS_SES_REGION_ENDPOINT = env.str("AWS_SES_REGION_ENDPOINT", default=None)
+        AWS_SES_REGION_ENDPOINT = env.str("AWS_SES_REGION_ENDPOINT", default=None)
 
 
 # URL
-PASSWORD_RESET_CONFIRM_URL=env.str("PASSWORD_RESET_CONFIRM_URL")
+PASSWORD_RESET_CONFIRM_URL = "/auth/reset-password/{uid}/{token}"

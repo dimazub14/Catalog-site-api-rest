@@ -47,9 +47,6 @@ class ResetPasswordSerializer(serializers.Serializer):
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
         attrs = super().validate(attrs)
-        attrs = {
-            "email": "someemail"
-        }
         if not UserService.exists(attrs):
             raise serializers.ValidationError({"email": "User with email: {} doesn't exists".format(attrs["email"])})
         return attrs

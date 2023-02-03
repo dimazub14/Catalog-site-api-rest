@@ -11,5 +11,4 @@ urlpatterns = [
     path("token/refresh/", views.RefreshAPIView.as_view(), name="token_refresh"),
     path("reset-password/", views.ResetPasswordAPIView.as_view(), name="reset_password"),
     path("reset-password-confirm/", views.ResetPasswordConfirmAPIView.as_view(),name="reset_password_confirm"),
-
-   ]
+]
