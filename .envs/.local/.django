@@ -4,6 +4,7 @@ USE_DOCKER=no
 IPYTHONDIR=/app/.ipython
 DATABASE_URL=postgres://db_user:db_pass@postgres:5432/app_db
 REDIS_URL=redis://redis:6379/1
+PASSWORD_RESET_CONFIRM_URL=http://localhost:4200/auth/reset-password/uid/token
 
 # CORS
 # ------------------------------------------------------------------------------
@@ -18,3 +19,16 @@ CELERY_TASK_DEFAULT_QUEUE=controller
 
 # Swagger
 SWAGGER_ENABLED=1
+
+# Emails
+# ------------------------------------------------------------------------------
+SMTP_TYPE=SES
+SMTP_ENABLED=1
+EMAIL_SUPPORTS=
+
+# AWS
+# ------------------------------------------------------------------------------
+AWS_SES_ACCESS_KEY_ID=AKIA2X3S3DZQVCIRIPPZ
+AWS_SES_SECRET_ACCESS_KEY=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
+AWS_SES_REGION_NAME=us-west-2
+AWS_SES_REGION_ENDPOINT=email.us-west-2.amazonaws.com
