@@ -169,6 +169,19 @@ class ResetPasswordConfirmSwagger(SwaggerWrapper):
                        ],
                 "token": [
                     "Invalid token for given user."
+                ],
+                "uid": [
+                    "This field may not be blank."
+                ],
+                "token": [
+                    "This field may not be blank."
+                ],
+                "new_password": [
+                    "This field may not be blank."
+                ],
+                "new_password": [
+                    "This password is too short. It must contain at least 8 characters.",
+                    "This password is entirely numeric."
                 ]
             },
             summary="Errors",
