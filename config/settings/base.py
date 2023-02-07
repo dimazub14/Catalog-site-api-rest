@@ -333,4 +333,6 @@ if SMTP_ENABLED:
 
 
 # URL
-PASSWORD_RESET_CONFIRM_URL = "/auth/reset-password/{uid}/{token}"
+DJANGO_PASSWORD_RESET_CONFIRM_URL = env.str("DJANGO_PASSWORD_RESET_CONFIRM_URL")
+# Ignore foo_test(s)/.
+# ignores any files or directories starting with '.'

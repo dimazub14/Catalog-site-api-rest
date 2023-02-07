@@ -1,16 +1,23 @@
+from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from rest_framework import permissions, status
-from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from apps.users.api.docs import LoginSwagger, RefreshSwagger
-from apps.users.api.serializers import UserRegistrationSerializer, ResetPasswordSerializer, \
-    PasswordResetConfirmSerializer
+
+from apps.users.api.docs import (
+    LoginSwagger,
+    RefreshSwagger,
+    ResetPassword,
+    ResetPasswordConfirm,
+)
+from apps.users.api.serializers import (
+    PasswordResetConfirmSerializer,
+    ResetPasswordSerializer,
+    UserRegistrationSerializer,
+)
 from apps.users.emails import PasswordResetEmail
 from apps.users.services import UserService
-from django.contrib.auth import get_user_model
-from django.utils.timezone import now
 
 User = get_user_model()
 
@@ -40,7 +47,10 @@ class RefreshAPIView(TokenRefreshView):
     """Refresh APi View"""
 
 
+@method_decorator(ResetPassword.extend_schema, name="post")
 class ResetPasswordAPIView(GenericAPIView):
+    """Reset-Password"""
+
     serializer_class = ResetPasswordSerializer
     service_class = UserService
     permission_classes = [permissions.AllowAny]
@@ -57,24 +67,11 @@ class ResetPasswordAPIView(GenericAPIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    # @action(["post"], detail=False)
-    # def reset_password_confirm(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #
-    #     serializer.user.set_password(serializer.data["new_password"])
-    #     if hasattr(serializer.user, "last_login"):
-    #         serializer.user.last_login = now()
-    #     serializer.user.save()
-    #
-    #     if settings.PASSWORD_CHANGED_EMAIL_CONFIRMATION:
-    #         context = {"user": serializer.user}
-    #         to = [get_user_email(serializer.user)]
-    #         settings.EMAIL.password_changed_confirmation(self.request, context).send(to)
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+@method_decorator(ResetPasswordConfirm.extend_schema, name="post")
 class ResetPasswordConfirmAPIView(GenericAPIView):
+    """Reset-Password-Confirm"""
+
     serializer_class = PasswordResetConfirmSerializer
     service_class = UserService
     permission_classes = [permissions.AllowAny]
@@ -83,8 +80,6 @@ class ResetPasswordConfirmAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.service_class.change_password(
-            user=serializer.validated_data["user"],
-            password=serializer.validated_data["new_password"]
+            user=serializer.validated_data["user"], password=serializer.validated_data["new_password"]
         )
         return Response(status=status.HTTP_204_NO_CONTENT)
-

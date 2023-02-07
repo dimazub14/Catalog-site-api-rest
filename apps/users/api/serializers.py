@@ -1,22 +1,17 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core import exceptions
+from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from apps import utils
 from apps.users.services import UserService
 
 User = get_user_model()
-from django.contrib.auth.password_validation import validate_password
-from rest_framework import exceptions, serializers
-from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.password_validation import validate_password
-from django.core import exceptions as django_exceptions
-from django.db import IntegrityError, transaction
-from rest_framework import exceptions, serializers
-from rest_framework.exceptions import ValidationError
-from rest_framework.settings import api_settings
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -53,6 +48,8 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Password-Reset-Confirm-Serializer"""
+
     uid = serializers.CharField()
     token = serializers.CharField()
     new_password = serializers.CharField(style={"input_type": "password"})
@@ -62,14 +59,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         "invalid_uid": _("Invalid user id or user doesn't exist."),
     }
 
-    def validate_new_password(self, value):
-        user = getattr(self, "user", None) or self.context["request"].user
-
-        try:
-            validate_password(value, user)
-        except django_exceptions.ValidationError as e:
-            raise serializers.ValidationError({"new_password": list(e.messages)})
-        return value
     def validate(self, attrs):
         validated_data = super().validate(attrs)
         try:
@@ -77,9 +66,12 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             self.user = UserService.get({"pk": uid})
         except (User.DoesNotExist, ValueError, TypeError, OverflowError):
             key_error = "invalid_uid"
-            raise ValidationError(
-                {"uid": [self.error_messages[key_error]]}, code=key_error
-            )
+            raise ValidationError({"uid": [self.error_messages[key_error]]}, code=key_error)
+
+        try:
+            validate_password(attrs["new_password"], self.user)
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({"new_password": list(e.messages)})
 
         is_token_valid = default_token_generator.check_token(self.user, self.initial_data.get("token", ""))
         if is_token_valid:
@@ -87,7 +79,4 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             return validated_data
         else:
             key_error = "invalid_token"
-            raise ValidationError(
-                {"token": [self.error_messages[key_error]]}, code=key_error
-            )
-
+            raise ValidationError({"token": [self.error_messages[key_error]]}, code=key_error)

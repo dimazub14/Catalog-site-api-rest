@@ -4,6 +4,7 @@ USE_DOCKER=no
 IPYTHONDIR=/app/.ipython
 DATABASE_URL=postgres://db_user:db_pass@postgres:5432/app_db
 REDIS_URL=redis://redis:6379/1
+DJANGO_PASSWORD_RESET_CONFIRM_URL=/auth/reset-password/{uid}/{token}
 
 # CORS
 # ------------------------------------------------------------------------------
@@ -28,7 +29,5 @@ DJANGO_DEFAULT_FROM_EMAIL=support@denis-test.com
 
 # AWS
 # ------------------------------------------------------------------------------
-AWS_SES_ACCESS_KEY_ID=
-AWS_SES_SECRET_ACCESS_KEY=
 AWS_SES_REGION_NAME=eu-central-1
 AWS_SES_REGION_ENDPOINT=email.eu-central-1.amazonaws.com

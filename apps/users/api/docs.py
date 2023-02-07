@@ -1,7 +1,7 @@
 from drf_spectacular.utils import OpenApiExample, inline_serializer
 from rest_framework import serializers
 
-from apps.users.api.serializers import UserRegistrationSerializer
+from apps.users.api.serializers import ResetPasswordSerializer , PasswordResetConfirmSerializer
 from apps.utils import SwaggerWrapper
 
 
@@ -99,6 +99,67 @@ class RefreshSwagger(SwaggerWrapper):
             description="Refresh example",
             request_only=True,
             response_only=False
+        ),
+    ]
+
+class ResetPassword(SwaggerWrapper):
+    """ResetPassword-Documentation"""
+    summary = "ResetPassword"
+    description = "Step 1. Enter the email that you received a confirmation email"
+    User = ['Users']
+
+    responses = {
+        "204": None
+    }
+    request = ResetPasswordSerializer()
+
+    examples=[
+        OpenApiExample(
+            name="Request Example",
+            value={
+                "email": "example@gmail.com"
+            },
+            summary="Example",
+            description="Reset Password example",
+            request_only=True
+        ),
+        OpenApiExample(
+            name="Errors",
+            value={
+                "email": [
+                        "User with email: not_exists@gmail.com doesn't exists"
+                    ]
+            },
+            summary="Errors",
+            description="Errors",
+            response_only=True,
+            status_codes=["400"]
+        ),
+    ]
+
+class ResetPasswordConfirm(SwaggerWrapper):
+    """ResetPasswordConfirm-Documentation"""
+    summary = "ResetPasswordConfirm"
+    description = "2.Step confirmation of password change."
+    User = ['Users']
+
+    responses = {
+        "200": PasswordResetConfirmSerializer()
+    }
+    request = PasswordResetConfirmSerializer()
+
+    examples=[
+        OpenApiExample(
+            name="ResetPasswordConfirm",
+            value={
+                "uid": "MzQ",
+                "token": "bj06jz-44adc411781d4f8c41976dc5dde54c41",
+                "new_password": "TestTest123"
+},
+            summary="Example",
+            description="ResetPasswordConfirm example",
+            response_only=True,
+            status_codes=["200"]
         ),
     ]
 
