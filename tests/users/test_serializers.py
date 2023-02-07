@@ -13,7 +13,7 @@ class TestSiteAdminRegisterSerializer(unittest.TestCase):
     """Class for test SiteAdminRegisterSerializer"""
 
     def setUp(self):
-        # self.user = SiteAdminFactory()
+        """setUp"""
         self.data = {"name": "test", "password": "TestTest123", "email": "test@gmail.com"}
         self.serializer = serializers.UserRegistrationSerializer
         self.email = {"email": "somesomegmail.com"}
@@ -52,6 +52,7 @@ class TestResetPasswordSerializer(unittest.TestCase):
     """Test-Reset-Password-Serializer"""
 
     def setUp(self) -> None:
+        """setUp"""
         self.user = EmailFactory()
         self.data = {"email": self.user.email}
         self.serializer = serializers.ResetPasswordSerializer
@@ -64,22 +65,21 @@ class TestResetPasswordSerializer(unittest.TestCase):
         self.assertEqual(list(serializer.data.keys()), ["email"])
 
     def test_wrong_email(self):
+        """test_wrong_email"""
         serializer = self.serializer(data=self.wrong_email)
         self.assertFalse(serializer.is_valid())
 
     def test_no_email(self):
+        """test_no_email"""
         serializer = self.serializer(data={})
         serializer.is_valid()
         self.assertFalse(serializer.is_valid())
-
-    # TODO: Case 1 - wrong email format. somesome@gmail.com
-    # TODO: Case 2 - Email not found.
-
 
 class TestPasswordResetConfirmSerializer(unittest.TestCase):
     """Test-Password-Reset-Confirm-Serializer"""
 
     def setUp(self) -> None:
+        """setUp"""
         self.data = {"uid": "Invalid uid", "new_password": "Invalid new_password", "token": "Invalid token"}
         self.serializer = serializers.PasswordResetConfirmSerializer
 
@@ -88,9 +88,3 @@ class TestPasswordResetConfirmSerializer(unittest.TestCase):
         serializer = self.serializer(data=self.data, many=False)
         serializer.is_valid()
         self.assertEqual(list(serializer.data.keys()), ["uid", "token", "new_password"])
-
-    # def validate_new_password(self, value):
-    #     user = getattr(self, "user", None) or self.context["request"].user
-
-    # TODO: Case - 1 Invalid uid
-    # TODO: Case - 2 Invalid token

@@ -334,5 +334,3 @@ if SMTP_ENABLED:
 
 # URL
 DJANGO_PASSWORD_RESET_CONFIRM_URL = env.str("DJANGO_PASSWORD_RESET_CONFIRM_URL")
-# Ignore foo_test(s)/.
-# ignores any files or directories starting with '.'

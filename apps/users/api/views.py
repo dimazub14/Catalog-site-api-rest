@@ -8,8 +8,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from apps.users.api.docs import (
     LoginSwagger,
     RefreshSwagger,
-    ResetPassword,
-    ResetPasswordConfirm,
+    ResetPasswordConfirmSwagger,
+    ResetPasswordSwagger,
 )
 from apps.users.api.serializers import (
     PasswordResetConfirmSerializer,
@@ -18,8 +18,6 @@ from apps.users.api.serializers import (
 )
 from apps.users.emails import PasswordResetEmail
 from apps.users.services import UserService
-
-User = get_user_model()
 
 
 class RegistrationUserAPIView(GenericAPIView):
@@ -47,7 +45,7 @@ class RefreshAPIView(TokenRefreshView):
     """Refresh APi View"""
 
 
-@method_decorator(ResetPassword.extend_schema, name="post")
+@method_decorator(ResetPasswordSwagger.extend_schema, name="post")
 class ResetPasswordAPIView(GenericAPIView):
     """Reset-Password"""
 
@@ -68,7 +66,7 @@ class ResetPasswordAPIView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@method_decorator(ResetPasswordConfirm.extend_schema, name="post")
+@method_decorator(ResetPasswordConfirmSwagger.extend_schema, name="post")
 class ResetPasswordConfirmAPIView(GenericAPIView):
     """Reset-Password-Confirm"""
 

@@ -102,7 +102,7 @@ class RefreshSwagger(SwaggerWrapper):
         ),
     ]
 
-class ResetPassword(SwaggerWrapper):
+class ResetPasswordSwagger(SwaggerWrapper):
     """ResetPassword-Documentation"""
     summary = "ResetPassword"
     description = "Step 1. Enter the email that you received a confirmation email"
@@ -137,7 +137,7 @@ class ResetPassword(SwaggerWrapper):
         ),
     ]
 
-class ResetPasswordConfirm(SwaggerWrapper):
+class ResetPasswordConfirmSwagger(SwaggerWrapper):
     """ResetPasswordConfirm-Documentation"""
     summary = "ResetPasswordConfirm"
     description = "2.Step confirmation of password change."
@@ -160,6 +160,21 @@ class ResetPasswordConfirm(SwaggerWrapper):
             description="ResetPasswordConfirm example",
             response_only=True,
             status_codes=["200"]
+        ),
+        OpenApiExample(
+            name="Errors",
+            value={
+                "uid": [
+                   "Invalid user id or user doesn't exist."
+                       ],
+                "token": [
+                    "Invalid token for given user."
+                ]
+            },
+            summary="Errors",
+            description="Errors",
+            response_only=True,
+            status_codes=["400"]
         ),
     ]
 
