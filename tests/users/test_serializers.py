@@ -1,16 +1,21 @@
 import unittest
 
+from faker import Faker
+
 from apps.users.api import serializers
 from tests.factory import UserFactory
+
+fake = Faker()
 
 
 class TestSiteAdminRegisterSerializer(unittest.TestCase):
     """Class for test SiteAdminRegisterSerializer"""
 
     def setUp(self):
-        # self.user = SiteAdminFactory()
+        """setUp"""
         self.data = {"name": "test", "password": "TestTest123", "email": "test@gmail.com"}
         self.serializer = serializers.UserRegistrationSerializer
+        self.email = {"email": "somesomegmail.com"}
 
     def test_serializer_expected_fields(self):
         """Test serializer expected fields"""
@@ -40,3 +45,46 @@ class TestSiteAdminRegisterSerializer(unittest.TestCase):
         """Test serializer validated data"""
         serializer = self.serializer(data=self.data)
         self.assertTrue(serializer.is_valid())
+
+
+class TestResetPasswordSerializer(unittest.TestCase):
+    """Test-Reset-Password-Serializer"""
+
+    def setUp(self) -> None:
+        """setUp"""
+        self.user = UserFactory()
+        self.data = {"email": self.user.email}
+        self.serializer = serializers.ResetPasswordSerializer
+        self.wrong_email = {"email": "somesome@gmail.com"}
+
+    def test_expected_fields(self):
+        """Test serializer expected fields"""
+        serializer = self.serializer(data=self.data)
+        serializer.is_valid()
+        self.assertEqual(list(serializer.data.keys()), ["email"])
+
+    def test_wrong_email(self):
+        """test_wrong_email"""
+        serializer = self.serializer(data=self.wrong_email)
+        self.assertFalse(serializer.is_valid())
+
+    def test_no_email(self):
+        """test_no_email"""
+        serializer = self.serializer(data={})
+        serializer.is_valid()
+        self.assertFalse(serializer.is_valid())
+
+
+class TestPasswordResetConfirmSerializer(unittest.TestCase):
+    """Test-Password-Reset-Confirm-Serializer"""
+
+    def setUp(self) -> None:
+        """setUp"""
+        self.data = {"uid": "Invalid uid", "new_password": "Invalid new_password", "token": "Invalid token"}
+        self.serializer = serializers.PasswordResetConfirmSerializer
+
+    def test_expected_fields(self):
+        """Test serializer expected fields"""
+        serializer = self.serializer(data=self.data, many=False)
+        serializer.is_valid()
+        self.assertEqual(list(serializer.data.keys()), ["uid", "token", "new_password"])

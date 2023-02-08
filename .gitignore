@@ -10,6 +10,7 @@ node_modules/
 dist/
 venv/
 staticfiles/
+.envs/.local/.secret
 
 # Compiled Java class files
 *.class

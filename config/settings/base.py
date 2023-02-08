@@ -285,6 +285,7 @@ SIMPLE_JWT = {
 }
 
 REST_USE_JWT = True
+# ------------------------------------------------------------------------------
 
 # CORS
 # ------------------------------------------------------------------------------
@@ -310,3 +311,26 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_BEAT_SCHEDULE: Dict[str, Any] = {}
 
 CELERY_TACKS_LATE = True
+
+SMTP_TYPE = env("SMTP_TYPE")  # SMTP | SES
+# SMTP
+SMTP_ENABLED = env.bool("SMTP_ENABLED")
+EMAIL_SUPPORTS = env.list("EMAIL_SUPPORTS")
+DEFAULT_FROM_EMAIL = env.str("DJANGO_DEFAULT_FROM_EMAIL")
+if SMTP_ENABLED:
+    if SMTP_TYPE == "SMTP":
+        EMAIL_HOST = env("EMAIL_HOST")
+        EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
+        EMAIL_PORT = env.str("EMAIL_PORT")
+        EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+        EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+    elif SMTP_TYPE == "SES":
+        EMAIL_BACKEND = "django_ses.SESBackend"
+        AWS_SES_ACCESS_KEY_ID = env.str("AWS_SES_ACCESS_KEY_ID", default=None)
+        AWS_SES_SECRET_ACCESS_KEY = env.str("AWS_SES_SECRET_ACCESS_KEY", default=None)
+        AWS_SES_REGION_NAME = env.str("AWS_SES_REGION_NAME", default=None)
+        AWS_SES_REGION_ENDPOINT = env.str("AWS_SES_REGION_ENDPOINT", default=None)
+
+
+# URL
+DJANGO_PASSWORD_RESET_CONFIRM_URL = env.str("DJANGO_PASSWORD_RESET_CONFIRM_URL")
