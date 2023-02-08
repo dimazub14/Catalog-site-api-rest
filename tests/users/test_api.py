@@ -3,7 +3,6 @@ from django.urls import reverse
 from faker import Faker
 from rest_framework import status
 from rest_framework.test import APITestCase
-from apps.users.api import views
 
 from tests.factory import UserFactory
 
@@ -152,8 +151,10 @@ class TestResetPasswordConfirmAPIView(APITestCase):
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+
 class TestChangePasswordAPIView(APITestCase):
     """ChangePassworAPIView"""
+
     def setUp(self) -> None:
         """setUp"""
         self.url = reverse("api:users_app:change_password")
