@@ -3,6 +3,7 @@ from django.urls import reverse
 from faker import Faker
 from rest_framework import status
 from rest_framework.test import APITestCase
+from apps.users.api import views
 
 from tests.factory import UserFactory
 
@@ -150,3 +151,34 @@ class TestResetPasswordConfirmAPIView(APITestCase):
         """test_success_case"""
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class TestChangePasswordAPIView(APITestCase):
+    """ChangePassworAPIView"""
+    def setUp(self) -> None:
+        """setUp"""
+        self.url = reverse("api:users_app:change_password")
+        self.data = {"new_password": "TestTest123"}
+        self.user = UserFactory()
+
+    def test_url(self):
+        """test_url"""
+        url = "/api/v1/users/change-password/"
+        self.assertEqual(url, self.url)
+        response = self.client.post(self.url)
+        self.assertNotIn(response.status_code, [status.HTTP_404_NOT_FOUND, status.HTTP_405_METHOD_NOT_ALLOWED])
+
+    def test_empty_data_unauthorized(self):
+        """test_empty_data"""
+        response = self.client.post(self.url, data={})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unauthorized(self):
+        """test_success_case"""
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_success_changed(self):
+        """force_authenticate"""
+        self.client.force_authenticate(self.user)
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

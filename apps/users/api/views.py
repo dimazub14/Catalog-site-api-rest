@@ -1,23 +1,30 @@
 from django.utils.decorators import method_decorator
+from django.conf import settings
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.contrib.auth import  user_logged_out, logout
 
+from apps import utils
 from apps.users.api.docs import (
     LoginSwagger,
     RefreshSwagger,
     ResetPasswordConfirmSwagger,
-    ResetPasswordSwagger,
+     ResetPasswordSwagger, ChangePasswordSwagger,
 )
 from apps.users.api.serializers import (
     PasswordResetConfirmSerializer,
     ResetPasswordSerializer,
-    UserRegistrationSerializer,
+    UserRegistrationSerializer, ChangePasswordSerializer,
 )
 from apps.users.emails import PasswordResetEmail
 from apps.users.services import UserService
-
+# ====================
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import render, redirect
 
 class RegistrationUserAPIView(GenericAPIView):
     """Registration User"""
@@ -79,4 +86,31 @@ class ResetPasswordConfirmAPIView(GenericAPIView):
         self.service_class.change_password(
             user=serializer.validated_data["user"], password=serializer.validated_data["new_password"]
         )
+        return Response(status=status.HTTP_204_NO_CONTENT)
+@method_decorator(ChangePasswordSwagger.extend_schema, name="post")
+class ChangePasswordAPIView(GenericAPIView):
+    """ChangePassword"""
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+
+    def logout_user(request):
+        if settings.TOKEN_MODEL:
+            settings.TOKEN_MODEL.objects.filter(user=request.user).delete()
+            user_logged_out.send(
+                sender=request.user.__class__, request=request, user=request.user
+            )
+        if settings.CREATE_SESSION_ON_LOGIN:
+            logout(request)
+    def get_user_email_field_name(user):
+        return user.get_email_field_name()
+    def get_user_email(user):
+        email_field_name = user.get_user_email_field_name(user)
+        return getattr(user, email_field_name, None)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        self.request.user.set_password(serializer.data["new_password"])
+        self.request.user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
