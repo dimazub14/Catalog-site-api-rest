@@ -4,7 +4,6 @@ from faker import Faker
 
 from apps.users.api import serializers
 from tests.factory import UserFactory
-from tests.factory.users import EmailFactory
 
 fake = Faker()
 
@@ -53,7 +52,7 @@ class TestResetPasswordSerializer(unittest.TestCase):
 
     def setUp(self) -> None:
         """setUp"""
-        self.user = EmailFactory()
+        self.user = UserFactory()
         self.data = {"email": self.user.email}
         self.serializer = serializers.ResetPasswordSerializer
         self.wrong_email = {"email": "somesome@gmail.com"}
@@ -74,6 +73,7 @@ class TestResetPasswordSerializer(unittest.TestCase):
         serializer = self.serializer(data={})
         serializer.is_valid()
         self.assertFalse(serializer.is_valid())
+
 
 class TestPasswordResetConfirmSerializer(unittest.TestCase):
     """Test-Password-Reset-Confirm-Serializer"""

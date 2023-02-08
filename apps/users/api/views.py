@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView

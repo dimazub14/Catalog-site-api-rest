@@ -165,24 +165,18 @@ class ResetPasswordConfirmSwagger(SwaggerWrapper):
             name="Errors",
             value={
                 "uid": [
-                   "Invalid user id or user doesn't exist."
-                       ],
-                "token": [
-                    "Invalid token for given user."
-                ],
-                "uid": [
+                    "Invalid user id or user doesn't exist.",
                     "This field may not be blank."
                 ],
                 "token": [
+                    "Invalid token for given user.",
                     "This field may not be blank."
                 ],
                 "new_password": [
-                    "This field may not be blank."
-                ],
-                "new_password": [
+                    "This field may not be blank.",
                     "This password is too short. It must contain at least 8 characters.",
                     "This password is entirely numeric."
-                ]
+                ],
             },
             summary="Errors",
             description="Errors",
