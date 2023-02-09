@@ -1,5 +1,3 @@
-from django.conf import settings
-from django.contrib.auth import logout, user_logged_out
 from django.utils.decorators import method_decorator
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
@@ -92,20 +90,6 @@ class ChangePasswordAPIView(GenericAPIView):
 
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ChangePasswordSerializer
-
-    def logout_user(request):
-        if settings.TOKEN_MODEL:
-            settings.TOKEN_MODEL.objects.filter(user=request.user).delete()
-            user_logged_out.send(sender=request.user.__class__, request=request, user=request.user)
-        if settings.CREATE_SESSION_ON_LOGIN:
-            logout(request)
-
-    def get_user_email_field_name(user):
-        return user.get_email_field_name()
-
-    def get_user_email(user):
-        email_field_name = user.get_user_email_field_name(user)
-        return getattr(user, email_field_name, None)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

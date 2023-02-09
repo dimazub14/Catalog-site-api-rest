@@ -88,3 +88,20 @@ class TestPasswordResetConfirmSerializer(unittest.TestCase):
         serializer = self.serializer(data=self.data, many=False)
         serializer.is_valid()
         self.assertEqual(list(serializer.data.keys()), ["uid", "token", "new_password"])
+
+
+class TestChangePasswordSerializer(unittest.TestCase):
+    """TestChangePasswordSerializer"""
+
+    def setUp(self) -> None:
+        """setUp"""
+        self.data = {
+            "new_password": "TestPassword123",
+        }
+        self.serializer = serializers.ChangePasswordSerializer
+
+    def test_expected_fields(self):
+        """Test serializer expected fields"""
+        serializer = self.serializer(data=self.data, many=False)
+        serializer.is_valid()
+        self.assertEqual(list(serializer.data.keys()), ["new_password"])
