@@ -210,7 +210,10 @@ class ChangePasswordSwagger(SwaggerWrapper):
             value={
               "new_password": [
               "Not a valid string.",
-              "This field is required."
+              "This field is required.",
+              "This password is too short. It must contain at least 8 characters.",
+              "This password is too common.",
+              "This password is entirely numeric."
               ]
             },
             summary="Errors",

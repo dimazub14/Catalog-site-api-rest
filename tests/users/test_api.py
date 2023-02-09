@@ -168,10 +168,11 @@ class TestChangePasswordAPIView(APITestCase):
         response = self.client.post(self.url)
         self.assertNotIn(response.status_code, [status.HTTP_404_NOT_FOUND, status.HTTP_405_METHOD_NOT_ALLOWED])
 
-    def test_empty_data_unauthorized(self):
+    def test_empty_data(self):
         """test_empty_data"""
+        self.client.force_authenticate(self.user)
         response = self.client.post(self.url, data={})
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_unauthorized(self):
         """test_success_case"""

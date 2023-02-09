@@ -102,6 +102,56 @@ class TestChangePasswordSerializer(unittest.TestCase):
 
     def test_expected_fields(self):
         """Test serializer expected fields"""
-        serializer = self.serializer(data=self.data, many=False)
-        serializer.is_valid()
-        self.assertEqual(list(serializer.data.keys()), ["new_password"])
+        serializer = self.serializer(data={}, many=False)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(list(serializer.errors.keys()), ["new_password"])
+
+    def test_not_valid_password(self):
+        """Test serializer not valid password"""
+        data = self.data.copy()
+        data["new_password"] = "123"
+        serializer = self.serializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        print(115, serializer.errors)
+
+class  TestPasswordSerializers(unittest.TestCase):
+    """Test-Serializers-for-Password"""
+    def setUp(self) -> None:
+        """setUp"""
+        self.data = {
+            "new_password": "TestPassword123",
+        }
+        self.serializer = serializers.ChangePasswordSerializer
+
+    def test_short_password(self):
+        """Test serializer short_Password"""
+        data = {
+            "new_password": "TeXS2"
+        }
+        serializer = self.serializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(serializer.errors["new_password"][0], "This password is too short. It must contain at least 8 characters.")
+
+    def test_numeric_password(self):
+        """Test serializer numeric_Password"""
+        data = {
+            "new_password": "14725820593850684844848484848487474764646464646"
+        }
+        serializer = self.serializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(serializer.errors["new_password"][0],
+                           "This password is entirely numeric.")
+
+    def test_common_password(self):
+        """Test serializer common_Password"""
+        data = {
+            "new_password": "password"
+        }
+        serializer = self.serializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(serializer.errors["new_password"][0],
+                          "This password is too common.")
+
+
+
+

@@ -84,5 +84,11 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     """ChangePasswordSerializer"""
-
     new_password = serializers.CharField()
+    def validate(self, attrs: Dict[str, Any]):
+        try:
+            print(90, attrs)
+            validate_password(attrs["new_password"])
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({"new_password": list(e.messages)})
+        return attrs
