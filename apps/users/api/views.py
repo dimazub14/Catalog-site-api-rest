@@ -95,7 +95,5 @@ class ChangePasswordAPIView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.service_class.change_password(
-            user=request.user, password=serializer.validated_data["new_password"]
-        )
+        self.service_class.change_password(user=request.user, password=serializer.validated_data["new_password"])
         return Response(status=status.HTTP_204_NO_CONTENT)

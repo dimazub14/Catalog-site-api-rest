@@ -84,7 +84,9 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     """ChangePasswordSerializer"""
+
     new_password = serializers.CharField()
+
     def validate(self, attrs: Dict[str, Any]):
         try:
             print(90, attrs)
