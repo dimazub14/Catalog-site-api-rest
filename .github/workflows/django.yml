@@ -29,3 +29,6 @@ jobs:
     - name: Run Tests
       run: |
        make test
+    - name: Lint
+      run: |
+        make validate
