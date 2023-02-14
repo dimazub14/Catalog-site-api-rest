@@ -31,5 +31,4 @@ jobs:
 #       make test
     - name: Validate
       run: |
-        git init
-        docker-compose -f local.yml run -e PRE_COMMIT_HOME=/tmp --rm django pre-commit run --all-files -c .pre-commit-config.yaml
+        docker-compose -f local.yml run --rm django pre-commit run --all-files -c .pre-commit-config.yaml
