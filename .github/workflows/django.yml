@@ -19,14 +19,14 @@ jobs:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
-    - name: Set up pre commit
-      uses: pre-commit/action@v3.0.0
+
       with:
         python-version: ${{ matrix.python-version }}
-#    - name: Install Dependencies
-#      run: |
-#        python -m pip install --upgrade pip
-#
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+    - name: Set up pre commit
+      uses: pre-commit/action@v3.0.0
 #        pip install -r ./requirements/local.txt
 #    - name: Run Tests
 #      run: |
