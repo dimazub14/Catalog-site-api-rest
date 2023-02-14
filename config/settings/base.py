@@ -1,13 +1,10 @@
 """
 Base settings to build other settings files upon.
 """
-from collections import OrderedDict
 from datetime import timedelta
-from decimal import Decimal
 from typing import Any, Dict, List
 
 import environ
-from celery.schedules import crontab
 
 ROOT_DIR = environ.Path(__file__) - 3  # (backend_meta/config/settings/base.py - 3 = backend_meta/)
 APPS_DIR = ROOT_DIR.path("apps")
@@ -92,12 +89,12 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework.authtoken",
     "django_celery_beat",
+    "rest_framework_simplejwt",
 ]
 
 HEALTH_CHECK = {"DISK_USAGE_MAX": None}
 
-LOCAL_APPS = [
-]  # type: List[Any]
+LOCAL_APPS = ["apps.users"]  # type: List[Any]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -244,7 +241,7 @@ DISABLE_ADMIN_PANEL = env.bool("DISABLE_ADMIN_PANEL", False)
 # User
 # ------------------------------------------------------------------------------
 
-# AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "users.User"
 
 # LOGGING
 # ------------------------------------------------------------------------------
@@ -270,11 +267,12 @@ LOGGING = {
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("apps.users.auth_middleware.CustomJWTAuthentication",),
+    # "DEFAULT_AUTHENTICATION_CLASSES": ("apps.users.auth_middleware.CustomJWTAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 100,
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
 }
 
 # rest_framework_simplejwt
@@ -287,6 +285,7 @@ SIMPLE_JWT = {
 }
 
 REST_USE_JWT = True
+# ------------------------------------------------------------------------------
 
 # CORS
 # ------------------------------------------------------------------------------
@@ -312,3 +311,26 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_BEAT_SCHEDULE: Dict[str, Any] = {}
 
 CELERY_TACKS_LATE = True
+
+SMTP_TYPE = env("SMTP_TYPE")  # SMTP | SES
+# SMTP
+SMTP_ENABLED = env.bool("SMTP_ENABLED")
+EMAIL_SUPPORTS = env.list("EMAIL_SUPPORTS")
+DEFAULT_FROM_EMAIL = env.str("DJANGO_DEFAULT_FROM_EMAIL")
+if SMTP_ENABLED:
+    if SMTP_TYPE == "SMTP":
+        EMAIL_HOST = env("EMAIL_HOST")
+        EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
+        EMAIL_PORT = env.str("EMAIL_PORT")
+        EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+        EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+    elif SMTP_TYPE == "SES":
+        EMAIL_BACKEND = "django_ses.SESBackend"
+        AWS_SES_ACCESS_KEY_ID = env.str("AWS_SES_ACCESS_KEY_ID", default=None)
+        AWS_SES_SECRET_ACCESS_KEY = env.str("AWS_SES_SECRET_ACCESS_KEY", default=None)
+        AWS_SES_REGION_NAME = env.str("AWS_SES_REGION_NAME", default=None)
+        AWS_SES_REGION_ENDPOINT = env.str("AWS_SES_REGION_ENDPOINT", default=None)
+
+
+# URL
+DJANGO_PASSWORD_RESET_CONFIRM_URL = env.str("DJANGO_PASSWORD_RESET_CONFIRM_URL")

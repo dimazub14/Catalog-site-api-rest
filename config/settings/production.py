@@ -73,7 +73,7 @@ AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 AWS_QUERYSTRING_EXPIRE = 3600
 AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
-AWS_LOCATION = 'static'
+AWS_LOCATION = "static"
 # STATIC
 # ------------------------
 STATICFILES_STORAGE = "config.storage_backends.StaticRootS3Boto3Storage"
