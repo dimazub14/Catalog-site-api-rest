@@ -1,7 +1,7 @@
 from drf_spectacular.utils import OpenApiExample, inline_serializer
 from rest_framework import serializers
 
-from apps.users.api.serializers import ResetPasswordSerializer , PasswordResetConfirmSerializer
+from apps.users.api.serializers import ResetPasswordSerializer, PasswordResetConfirmSerializer, ChangePasswordSerializer
 from apps.utils import SwaggerWrapper
 
 
@@ -184,4 +184,41 @@ class ResetPasswordConfirmSwagger(SwaggerWrapper):
             status_codes=["400"]
         ),
     ]
+class ChangePasswordSwagger(SwaggerWrapper):
+    """ChangePassword"""
+    summary = "ChangePassword"
+    description = "ChangePassword"
+    User = ['Users']
 
+    responses = {
+        ChangePasswordSerializer()
+    }
+    request = ChangePasswordSerializer()
+
+    examples = [
+        OpenApiExample(
+            name="Request Example",
+            value={
+                "new_password": "Testpassword123"
+            },
+            summary="Example",
+            description="Change Password example",
+            request_only=True
+        ),
+        OpenApiExample(
+            name="Errors",
+            value={
+              "new_password": [
+              "Not a valid string.",
+              "This field is required.",
+              "This password is too short. It must contain at least 8 characters.",
+              "This password is too common.",
+              "This password is entirely numeric."
+              ]
+            },
+            summary="Errors",
+            description="Errors",
+            response_only=True,
+            status_codes=["400"]
+        ),
+        ]

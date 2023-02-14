@@ -5,12 +5,14 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.users.api.docs import (
+    ChangePasswordSwagger,
     LoginSwagger,
     RefreshSwagger,
     ResetPasswordConfirmSwagger,
     ResetPasswordSwagger,
 )
 from apps.users.api.serializers import (
+    ChangePasswordSerializer,
     PasswordResetConfirmSerializer,
     ResetPasswordSerializer,
     UserRegistrationSerializer,
@@ -79,4 +81,19 @@ class ResetPasswordConfirmAPIView(GenericAPIView):
         self.service_class.change_password(
             user=serializer.validated_data["user"], password=serializer.validated_data["new_password"]
         )
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@method_decorator(ChangePasswordSwagger.extend_schema, name="post")
+class ChangePasswordAPIView(GenericAPIView):
+    """ChangePassword"""
+
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+    service_class = UserService
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.service_class.change_password(user=request.user, password=serializer.validated_data["new_password"])
         return Response(status=status.HTTP_204_NO_CONTENT)

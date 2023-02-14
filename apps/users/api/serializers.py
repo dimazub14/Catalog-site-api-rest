@@ -80,3 +80,17 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         else:
             key_error = "invalid_token"
             raise ValidationError({"token": [self.error_messages[key_error]]}, code=key_error)
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """ChangePasswordSerializer"""
+
+    new_password = serializers.CharField()
+
+    def validate(self, attrs: Dict[str, Any]):
+        try:
+            print(90, attrs)
+            validate_password(attrs["new_password"])
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({"new_password": list(e.messages)})
+        return attrs
