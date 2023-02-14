@@ -31,4 +31,4 @@ jobs:
        make test
     - name: Lint
       run: |
-        make validate
+        docker-compose -f local.yml run -e PRE_COMMIT_HOME=/tmp --rm django pre-commit run --all-files -c .pre-commit-config.yaml
