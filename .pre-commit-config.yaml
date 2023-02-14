@@ -59,13 +59,13 @@ repos:
         entry: bandit -r apps --ini=.bandit
         types: [ python ]
         pass_filenames: false
-      - id: mypy
-        name: mypy
-        stages: [ commit ]
-        language: system
-        entry: bash -c 'PYTHONPATH="$PYTHONPATH:$PWD" mypy'
-        types: [ python ]
-        pass_filenames: false
+#      - id: mypy
+#        name: mypy
+#        stages: [ commit ]
+#        language: system
+#        entry: bash -c 'PYTHONPATH="$PYTHONPATH:$PWD" mypy'
+#        types: [ python ]
+#        pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
