@@ -25,9 +25,6 @@ jobs:
     - name: Build Project
       run: |
         docker-compose -f local.yml up -d --build
-    - name: Set up pre commit
-      uses: pre-commit/action@v3.0.0
-
 #    - name: Run Tests
 #      run: |
 #       make test
