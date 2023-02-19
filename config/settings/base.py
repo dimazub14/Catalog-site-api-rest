@@ -94,7 +94,10 @@ THIRD_PARTY_APPS = [
 
 HEALTH_CHECK = {"DISK_USAGE_MAX": None}
 
-LOCAL_APPS = ["apps.users"]  # type: List[Any]
+LOCAL_APPS = [
+    "apps.users",
+    "apps.categories",
+]  # type: List[Any]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

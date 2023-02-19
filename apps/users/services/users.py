@@ -32,3 +32,4 @@ class UserService:
     def change_password(cls, user: "User", password: str) -> None:
         user.set_password(password)
         user.save(update_fields=["password"])
+        # Notification
