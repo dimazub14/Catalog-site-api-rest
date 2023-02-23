@@ -4,6 +4,7 @@ volumes:
   local_postgres_data: {}
   local_postgres_data_backups: {}
   local_redis_data: {}
+  data_mongodb: {}
 
 services:
   django: &django
@@ -15,6 +16,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - mongo
     volumes:
       - .:/app
     env_file:
@@ -34,6 +36,16 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - "5435:5432"
+
+  mongo:
+    image: mongo
+    hostname: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - data_mongodb:/data/db
+    env_file:
+      - ./.envs/.local/.mongo
 
   redis:
     image: redis:6.2-alpine

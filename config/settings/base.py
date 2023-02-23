@@ -55,7 +55,20 @@ LOCALE_PATHS = [ROOT_DIR.path("locale")]
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASES = {
+    "default": env.db("DATABASE_URL"),
+    "mongo": {
+        'ENGINE': 'djongo',
+        'NAME': 'mydatabase',
+        'CLIENT': {
+            'host': 'mongodb://mongodb:27017',
+            'username': 'root',
+            'password': 'password',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        }
+    }
+}
 DATABASES["default"]["ATOMIC_REQUESTS"] = False
 
 # URLS
@@ -97,6 +110,7 @@ HEALTH_CHECK = {"DISK_USAGE_MAX": None}
 LOCAL_APPS = [
     "apps.users",
     "apps.categories",
+    "apps.products",
 ]  # type: List[Any]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
